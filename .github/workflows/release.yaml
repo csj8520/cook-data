@@ -10,6 +10,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # 允许 GITHUB_TOKEN 推送代码
     steps:
       - uses: actions/checkout@v4
         with:
