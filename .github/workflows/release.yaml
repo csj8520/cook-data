@@ -35,4 +35,4 @@ jobs:
       - name: 自动提交更新
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "CI: 自动更新子模块 $(date +'%Y-%m-%d %H:%M:%S')"
+          commit_message: "CI: 自动更新"
