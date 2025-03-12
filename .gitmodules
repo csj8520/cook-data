@@ -1,0 +1,3 @@
+[submodule "HowToCook"]
+	path = HowToCook
+	url = ssh://git@ssh.github.com:443/Anduin2017/HowToCook.git

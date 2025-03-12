@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: release
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # 允许手动触发
+  schedule:
+    - cron: "0 0 * * *" # 每天午夜执行（可选）
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-data
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - run: pnpm i
+      - run: |
+          git submodule update --remote --merge
+          npm start
+
+      - name: 自动提交更新
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "CI: 自动更新子模块 $(date +'%Y-%m-%d %H:%M:%S')"
