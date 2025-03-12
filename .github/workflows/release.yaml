@@ -16,7 +16,6 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-data
       - uses: pnpm/action-setup@v2
         with:
           version: 9
