@@ -79,4 +79,4 @@ while ((event = walker.next())) {
 }
 // console.log('cookMenu: ', cookMenu);
 
-fs.writeFile('./data/cookMenu.json', JSON.stringify(cookMenu));
+fs.writeFile('./data/menu.json', JSON.stringify(cookMenu));
