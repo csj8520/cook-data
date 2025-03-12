@@ -6,16 +6,14 @@ const cwd = process.cwd();
 interface CookMenu {
   title: string;
   level: number;
-  content?: string;
+  url?: string;
   children: CookMenu[];
 }
 
 const cookMenu: CookMenu[] = [];
 
-async function formatMenu(url: string) {
-  // return (await fs.readFile(url)).toString();
-  return path.relative(cwd, url);
-  // return url;
+async function formatUrl(url: string) {
+  return `/${path.relative(cwd, url)}`;
 }
 
 const readme = (await fs.readFile('./HowToCook/README.md')).toString();
@@ -66,13 +64,13 @@ while ((event = walker.next())) {
           menu.children.push({
             title: event2.node.firstChild?.literal || '',
             level: menu.level + 1,
-            content: await formatMenu(path.join(path.dirname(filePath), decodeURIComponent(event2.node.destination!))),
+            url: await formatUrl(path.join(path.dirname(filePath), decodeURIComponent(event2.node.destination!))),
             children: [],
           });
         }
       }
     } else {
-      const menu: CookMenu = { title, level: lastMenu.level + 1, children: [], content: await formatMenu(path.join(cwd, 'HowToCook', url)) };
+      const menu: CookMenu = { title, level: lastMenu.level + 1, children: [], url: await formatUrl(path.join(cwd, 'HowToCook', url)) };
       lastMenu.children.push(menu);
     }
   }
