@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { NodeWalkingStep, Parser } from 'commonmark';
+import { execSync } from 'child_process';
 
 const cwd = process.cwd();
 interface CookMenu {
@@ -75,6 +76,14 @@ while ((event = walker.next())) {
     }
   }
 }
-// console.log('cookMenu: ', cookMenu);
+const version = execSync('git rev-parse HEAD:HowToCook').toString().trim();
 
-fs.writeFile('./data/menu.json', JSON.stringify(cookMenu));
+await fs.writeFile(
+  './data/menu.json',
+  JSON.stringify({
+    code: 0,
+    version,
+    updateTime: Date.now(),
+    data: { title: '程序员做饭指北', children: cookMenu, level: 0 },
+  }),
+);
