@@ -33,7 +33,7 @@ while ((event = walker.next())) {
   if (event.node.type === 'heading') {
     let last = cookMenu.at(-1);
     if (!isStart) {
-      if (title === '做菜之前') isStart = true;
+      if (title === '搭建环境') isStart = true;
       else continue;
     }
     const _lastMenu: CookMenu = { title, level, children: [] };
