@@ -5,10 +5,9 @@ import { execSync } from 'child_process';
 const cwd = process.cwd();
 interface CookMenu {
   title: string;
-  level: number;
   url?: string;
   desc?: string;
-  children: CookMenu[];
+  children?: CookMenu[];
 }
 
 function formatUrl(url: string) {
@@ -18,7 +17,7 @@ function formatUrl(url: string) {
 function getLastForLevel(menu: CookMenu[], level: number) {
   let last = menu[menu.length - 1];
   for (let i = 0; i < level; i++) {
-    if (last.children.length === 0) break;
+    if (!last.children?.length) break;
     last = last.children[last.children.length - 1];
   }
   return last;
@@ -40,12 +39,12 @@ async function handle(file: string) {
     if (title) {
       level = title[1].length - 1;
       const titleStr = title[2];
-      const menu: CookMenu = { title: titleStr, level, children: [] };
+      const menu: CookMenu = { title: titleStr, children: [] };
       if (level === 0) {
         cookMenu.push(menu);
       } else {
         const last = getLastForLevel(cookMenu, level - 1);
-        last.children.push(menu);
+        last.children!.push(menu);
       }
     }
 
@@ -57,19 +56,17 @@ async function handle(file: string) {
       const filePath = path.join(path.dirname(file), url);
       if (url.startsWith('starsystem')) {
         const children = await handle(filePath);
-        const menu: CookMenu = { title, level: level + 1, children: children[0].children };
-        last.children.push(menu);
+        const menu: CookMenu = { title, children: children[0].children };
+        last.children!.push(menu);
       } else {
         const book = (await fs.readFile(filePath)).toString();
-        const [_, star = ''] = book.match(/预估烹饪难度：(★+)/) ?? [];
+        const [_, star] = book.match(/预估烹饪难度：(★+)/) ?? [];
         const menu: CookMenu = {
           title,
-          level: level + 1,
           url: formatUrl(filePath),
           desc: star,
-          children: [],
         };
-        last.children.push(menu);
+        last.children!.push(menu);
       }
     }
   }
@@ -81,9 +78,9 @@ function filterEmptyData(cookMenu: CookMenu[]): CookMenu[] {
   return cookMenu
     .map(it => ({
       ...it,
-      children: filterEmptyData(it.children),
+      children: it.children ? filterEmptyData(it.children) : void 0,
     }))
-    .filter(it => it.children.length > 0 || it.url);
+    .filter(it => !!it.children?.length || it.url);
 }
 
 const cookMenu = filterEmptyData(await handle(path.join(cwd, './HowToCook/README.md')));
@@ -96,6 +93,6 @@ await fs.writeFile(
     code: 0,
     version,
     updateTime: Date.now(),
-    data: { title: '程序员做饭指北', children: cookMenu[0].children, level: 0 },
+    data: { title: '程序员做饭指北', children: cookMenu[0].children },
   }),
 );
