@@ -60,6 +60,8 @@ async function handle(file: string) {
         const menu: CookMenu = { title, level: level + 1, children: children[0].children };
         last.children.push(menu);
       } else {
+        const isExist = await fs.access(filePath, fs.constants.R_OK).catch(() => false);
+        if (isExist === false) continue;
         const book = (await fs.readFile(filePath)).toString();
         const [_, star = ''] = book.match(/预估烹饪难度：(★+)/) ?? [];
         const menu: CookMenu = {
