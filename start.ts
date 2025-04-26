@@ -9,6 +9,7 @@ interface CookMenu {
   url?: string;
   desc?: string;
   children: CookMenu[];
+  tag?: string[];
 }
 
 function formatUrl(url: string) {
@@ -63,6 +64,14 @@ async function handle(file: string) {
         const isExist = await fs.access(filePath, fs.constants.R_OK).catch(() => false);
         if (isExist === false) continue;
         const book = (await fs.readFile(filePath)).toString();
+        // 必备原料和工具
+        const [_r, tagRaw = ''] = book.match(/必备原料和工具[\s\n]+([^#]+)/) ?? [];
+        const tag = tagRaw
+          .split('\n')
+          .map(it => it.trim().replace(/^[\-\*]\s*/, ''))
+          .filter(Boolean);
+
+        // console.log('args: ', filePath, tag);
         const [_, star = ''] = book.match(/预估烹饪难度：(★+)/) ?? [];
         const menu: CookMenu = {
           title,
@@ -70,6 +79,7 @@ async function handle(file: string) {
           url: formatUrl(filePath),
           desc: star,
           children: [],
+          tag,
         };
         last.children.push(menu);
       }

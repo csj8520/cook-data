@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # 允许 GITHUB_TOKEN 推送代码
+      pages: write
+      id-token: write
     steps:
       # - uses: actions/checkout@v4
       - uses: nschloe/action-cached-lfs-checkout@v1
@@ -30,10 +32,10 @@ jobs:
           cache: "pnpm"
 
       - run: |
-          cat HowToCook/dishes/dessert/炸鲜奶/炸鲜奶.jpg
+          ls -lah HowToCook/dishes/dessert/炸鲜奶
           git submodule update --remote
           git submodule foreach --recursive git lfs pull
-          cat HowToCook/dishes/dessert/炸鲜奶/炸鲜奶.jpg
+          ls -lah HowToCook/dishes/dessert/炸鲜奶
 
       - run: pnpm i
       - run: npm start
@@ -42,3 +44,14 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "CI: Auto Update"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: "."
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
