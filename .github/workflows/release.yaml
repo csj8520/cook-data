@@ -30,8 +30,10 @@ jobs:
           cache: "pnpm"
 
       - run: |
+          cat HowToCook/dishes/dessert/炸鲜奶/炸鲜奶.jpg
           git submodule update --remote
           git submodule foreach --recursive git lfs pull
+          cat HowToCook/dishes/dessert/炸鲜奶/炸鲜奶.jpg
 
       - run: pnpm i
       - run: npm start
