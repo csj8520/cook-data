@@ -14,7 +14,7 @@ jobs:
       contents: write # 允许 GITHUB_TOKEN 推送代码
     steps:
       # - uses: actions/checkout@v4
-      - uses: nschloe/action-cached-lfs-checkout@v1
+      - uses: francisbilham11/action-cached-lfs-checkout@v3
         with:
           lfs: true
           fetch-depth: 0
