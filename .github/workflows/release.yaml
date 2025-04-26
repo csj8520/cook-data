@@ -13,9 +13,10 @@ jobs:
     permissions:
       contents: write # 允许 GITHUB_TOKEN 推送代码
     steps:
-      - uses: actions/checkout@v4
+      # - uses: actions/checkout@v4
+      - uses: nschloe/action-cached-lfs-checkout@v1
         with:
-          # lfs: true
+          lfs: true
           fetch-depth: 0
           submodules: recursive
 
