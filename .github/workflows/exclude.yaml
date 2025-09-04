@@ -1,14 +1,10 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: release
+name: exclude
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch: # 允许手动触发
-  schedule:
-    - cron: "0 0 * * *" # 每天午夜执行（可选）
+
 jobs:
-  release:
+  exclude:
     runs-on: ubuntu-latest
     permissions:
       contents: write # 允许 GITHUB_TOKEN 推送代码
@@ -36,7 +32,7 @@ jobs:
           git submodule foreach --recursive git lfs pull
 
       - run: pnpm i
-      - run: npm start
+      - run: npm start -- -e 菜谱
 
       - name: Submit Update
         uses: stefanzweifel/git-auto-commit-action@v5

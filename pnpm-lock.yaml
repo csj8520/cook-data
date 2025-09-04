@@ -7,16 +7,14 @@ settings:
 importers:
 
   .:
+    dependencies:
+      commander:
+        specifier: ^14.0.0
+        version: 14.0.0
     devDependencies:
-      '@types/commonmark':
-        specifier: ^0.27.9
-        version: 0.27.9
       '@types/node':
-        specifier: ^22.13.10
-        version: 22.13.10
-      commonmark:
-        specifier: ^0.31.2
-        version: 0.31.2
+        specifier: ^24.3.0
+        version: 24.3.0
       esno:
         specifier: ^4.8.0
         version: 4.8.0
@@ -173,19 +171,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@types/commonmark@0.27.9':
-    resolution: {integrity: sha512-d3+57WgyPCcIc6oshmcPkmP4+JqRRot9eeZLsBsutWtIxwWivpoyc2wEcolOp8MyO3ZWN846mMdoR02kdHSMCw==}
+  '@types/node@24.3.0':
+    resolution: {integrity: sha512-aPTXCrfwnDLj4VvXrm+UUCQjNEvJgNA8s5F1cvwQU+3KNltTOkBm1j30uNLyqqPNe7gE3KFzImYoZEfLhp4Yow==}
 
-  '@types/node@22.13.10':
-    resolution: {integrity: sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==}
-
-  commonmark@0.31.2:
-    resolution: {integrity: sha512-2fRLTyb9r/2835k5cwcAwOj0DEc44FARnMp5veGsJ+mEAZdi52sNopLu07ZyElQUz058H43whzlERDIaaSw4rg==}
-    hasBin: true
-
-  entities@3.0.1:
-    resolution: {integrity: sha512-WiyBqoomrwMdFG1e0kqvASYfnlb0lp8M5o5Fw2OFq1hNZxxcNk8Ik0Xm7LxzBhuidnZB/UtBqVCgUz3kBOP51Q==}
-    engines: {node: '>=0.12'}
+  commander@14.0.0:
+    resolution: {integrity: sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==}
+    engines: {node: '>=20'}
 
   esbuild@0.25.1:
     resolution: {integrity: sha512-BGO5LtrGC7vxnqucAe/rmvKdJllfGaYWdyABvyMoXQlfYMb2bbRuReWR5tEGE//4LcNJj9XrkovTqNYRFZHAMQ==}
@@ -204,12 +195,6 @@ packages:
   get-tsconfig@4.10.0:
     resolution: {integrity: sha512-kGzZ3LWWQcGIAmg6iWvXn0ei6WDtV26wzHRMwDSzmAbcXrTEXxHy6IehI6/4eT6VRKyMP1eF1VqwrVUmE/LR7A==}
 
-  mdurl@1.0.1:
-    resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
-
-  minimist@1.2.8:
-    resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
-
   resolve-pkg-maps@1.0.0:
     resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==}
 
@@ -218,8 +203,8 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  undici-types@6.20.0:
-    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
+  undici-types@7.10.0:
+    resolution: {integrity: sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag==}
 
 snapshots:
 
@@ -298,19 +283,11 @@ snapshots:
   '@esbuild/win32-x64@0.25.1':
     optional: true
 
-  '@types/commonmark@0.27.9': {}
-
-  '@types/node@22.13.10':
+  '@types/node@24.3.0':
     dependencies:
-      undici-types: 6.20.0
+      undici-types: 7.10.0
 
-  commonmark@0.31.2:
-    dependencies:
-      entities: 3.0.1
-      mdurl: 1.0.1
-      minimist: 1.2.8
-
-  entities@3.0.1: {}
+  commander@14.0.0: {}
 
   esbuild@0.25.1:
     optionalDependencies:
@@ -351,10 +328,6 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  mdurl@1.0.1: {}
-
-  minimist@1.2.8: {}
-
   resolve-pkg-maps@1.0.0: {}
 
   tsx@4.19.3:
@@ -364,4 +337,4 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  undici-types@6.20.0: {}
+  undici-types@7.10.0: {}

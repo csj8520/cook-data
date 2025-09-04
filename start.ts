@@ -1,15 +1,19 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { execSync } from 'child_process';
+import { program } from 'commander';
+
+const options = program.option('-e, --exclude <string...>', '', []).parse().opts<{ exclude: string[] }>();
 
 const cwd = process.cwd();
 interface CookMenu {
   title: string;
   level: number;
   url?: string;
-  desc?: string;
+  // desc: string;
+  star: number;
   children: CookMenu[];
-  tag?: string[];
+  tag: string[];
 }
 
 function formatUrl(url: string) {
@@ -41,7 +45,7 @@ async function handle(file: string) {
     if (title) {
       level = title[1].length - 1;
       const titleStr = title[2];
-      const menu: CookMenu = { title: titleStr, level, children: [] };
+      const menu: CookMenu = { title: titleStr, level, children: [], star: 0, tag: [] };
       if (level === 0) {
         cookMenu.push(menu);
       } else {
@@ -58,26 +62,34 @@ async function handle(file: string) {
       const filePath = path.join(path.dirname(file), url);
       if (url.startsWith('starsystem')) {
         const children = await handle(filePath);
-        const menu: CookMenu = { title, level: level + 1, children: children[0].children };
+        const menu: CookMenu = { title, level: level + 1, children: children[0].children, star: 0, tag: [] };
         last.children.push(menu);
       } else {
         const isExist = await fs.access(filePath, fs.constants.R_OK).catch(() => false);
         if (isExist === false) continue;
         const book = (await fs.readFile(filePath)).toString();
-        // 必备原料和工具
-        const [_r, tagRaw = ''] = book.match(/必备原料和工具[\s\n]+([^#]+)/) ?? [];
+
+        const tagRaw = book.match(/必备原料和工具([\s\S]+?)计算/)?.[1] ?? '';
         const tag = tagRaw
           .split('\n')
-          .map(it => it.trim().replace(/^[\-\*]\s*/, ''))
+          .map(it => it.replace(/^[\-\*\+\#\s]*/, ''))
+          .filter(it => !it.startsWith('![') && !it.startsWith('>') && !it.startsWith('<!--') && !/(原料)|(工具)/.test(it))
+          .map(it =>
+            it
+              .replace(/\[(.+)\]\(.+\)/g, '$1')
+              .replace(/[（\(\[].*[）\)\]]/g, '')
+              .replace(/\*/g, '')
+              .trim(),
+          )
           .filter(Boolean);
 
-        // console.log('args: ', filePath, tag);
         const [_, star = ''] = book.match(/预估烹饪难度：(★+)/) ?? [];
         const menu: CookMenu = {
           title,
           level: level + 1,
           url: formatUrl(filePath),
-          desc: star,
+          // desc: star,
+          star: star.length,
           children: [],
           tag,
         };
@@ -90,15 +102,14 @@ async function handle(file: string) {
 }
 
 function filterEmptyData(cookMenu: CookMenu[]): CookMenu[] {
-  return cookMenu
-    .map(it => ({
-      ...it,
-      children: filterEmptyData(it.children),
-    }))
-    .filter(it => it.children.length > 0 || it.url);
+  return cookMenu.map(it => ({ ...it, children: filterEmptyData(it.children) })).filter(it => it.children.length > 0 || it.url);
 }
 
-const cookMenu = filterEmptyData(await handle(path.join(cwd, './HowToCook/README.md')));
+function excludeData(cookMenu: CookMenu[], exclude: string[]): CookMenu[] {
+  return cookMenu.map(it => ({ ...it, children: excludeData(it.children, exclude) })).filter(it => !exclude.includes(it.title));
+}
+
+const cookMenu = excludeData(filterEmptyData(await handle(path.join(cwd, './HowToCook/README.md'))), options.exclude);
 
 const version = execSync('git rev-parse HEAD:HowToCook').toString().trim();
 
@@ -107,7 +118,9 @@ await fs.writeFile(
   JSON.stringify({
     code: 0,
     version,
-    updateTime: Date.now(),
+    // updateTime: Date.now(),
     data: { title: '程序员做饭指北', children: cookMenu[0].children, level: 0 },
   }),
 );
+
+console.log('Generate successfully version: ', version);
