@@ -106,7 +106,7 @@ function filterEmptyData(cookMenu: CookMenu[]): CookMenu[] {
 }
 
 function excludeData(cookMenu: CookMenu[], exclude: string[]): CookMenu[] {
-  return cookMenu.map(it => ({ ...it, children: excludeData(it.children, exclude) })).filter(it => !exclude.includes(it.title));
+  return cookMenu.filter(it => !exclude.includes(it.title)).map(it => ({ ...it, children: excludeData(it.children, exclude) }));
 }
 
 const cookMenu = excludeData(filterEmptyData(await handle(path.join(cwd, './HowToCook/README.md'))), options.exclude);
