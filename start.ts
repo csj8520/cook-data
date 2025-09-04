@@ -114,12 +114,20 @@ const abort: CookMenu = {
   level: 0,
   children: [
     {
-      title: '关于',
+      title: 'HowToCook',
       level: 0,
       children: [],
       star: 0,
       tag: [],
       url: '/HowToCook/README.md',
+    },
+    {
+      title: '程序员做饭指北',
+      level: 0,
+      children: [],
+      star: 0,
+      tag: [],
+      url: '/README.md',
     },
   ],
   star: 0,

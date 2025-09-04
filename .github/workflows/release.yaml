@@ -46,7 +46,7 @@ jobs:
       - name: Copy File
         run: |
           mkdir dist
-          cp -r ./data ./HowToCook ./dist
+          cp -r ./data ./HowToCook ./README.md ./dist
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
