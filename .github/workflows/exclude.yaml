@@ -32,7 +32,7 @@ jobs:
           git submodule foreach --recursive git lfs pull
 
       - run: pnpm i
-      - run: npm start -- -e 搭建环境 菜谱
+      - run: npm start -- -e 搭建环境 菜谱 进阶知识学习
 
       - name: Submit Update
         uses: stefanzweifel/git-auto-commit-action@v5

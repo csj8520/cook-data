@@ -109,7 +109,27 @@ function excludeData(cookMenu: CookMenu[], exclude: string[]): CookMenu[] {
   return cookMenu.filter(it => !exclude.includes(it.title)).map(it => ({ ...it, children: excludeData(it.children, exclude) }));
 }
 
-const cookMenu = excludeData(filterEmptyData(await handle(path.join(cwd, './HowToCook/README.md'))), options.exclude);
+const abort: CookMenu = {
+  title: '关于',
+  level: 0,
+  children: [
+    {
+      title: '关于',
+      level: 0,
+      children: [],
+      star: 0,
+      tag: [],
+      url: '/HowToCook/README.md',
+    },
+  ],
+  star: 0,
+  tag: [],
+};
+
+const cook = await handle(path.join(cwd, './HowToCook/README.md'));
+cook[0].children.push(abort);
+
+const cookMenu = excludeData(filterEmptyData(cook), options.exclude)[0];
 
 const version = execSync('git rev-parse HEAD:HowToCook').toString().trim();
 
@@ -118,8 +138,7 @@ await fs.writeFile(
   JSON.stringify({
     code: 0,
     version,
-    // updateTime: Date.now(),
-    data: { title: '程序员做饭指北', children: cookMenu[0].children, level: 0 },
+    data: { ...cookMenu, title: '程序员做饭指北' },
   }),
 );
 
