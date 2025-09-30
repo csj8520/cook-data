@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import { glob } from 'glob';
 import path from 'path';
 import { execSync } from 'child_process';
 import { program } from 'commander';
@@ -122,6 +123,14 @@ const abort: CookMenu = {
       url: '/HowToCook/README.md',
     },
     {
+      title: 'CookLikeHOC',
+      level: 0,
+      children: [],
+      star: 0,
+      tag: [],
+      url: '/CookLikeHOC/README.md',
+    },
+    {
       title: '程序员做饭指北',
       level: 0,
       children: [],
@@ -137,9 +146,58 @@ const abort: CookMenu = {
 const cook = await handle(path.join(cwd, './HowToCook/README.md'));
 cook[0].children.push(abort);
 
+const menuIdx = cook[0].children.findIndex(it => it.title === '菜谱');
+if (menuIdx !== -1) {
+  // 老乡鸡
+  const menus = (await glob('./CookLikeHOC/*/README.md')).sort((a, b) => a.localeCompare(b, 'zh-Hans-CN-u-co-pinyin'));
+  const rootMenu: CookMenu = {
+    title: '老乡鸡开源菜谱',
+    level: 1,
+    children: [],
+    star: 0,
+    tag: [],
+  };
+  for (const menu of menus) {
+    const books = (await glob(path.join(menu, '../*.md'), { ignore: '**/README.md' })).sort((a, b) => a.localeCompare(b, 'zh-Hans-CN-u-co-pinyin'));
+    const _menu: CookMenu = {
+      title: path.basename(path.dirname(menu)),
+      level: 2,
+      children: [],
+      star: 0,
+      tag: [],
+    };
+    for (const book of books) {
+      const text = (await fs.readFile(book)).toString();
+      const tagRaw = text.match(/(?:(?:配料)|(?:原料[:：]?)|(?:已知成分))(?:\s+)([\s\S]*?)\n\n/)?.[1] ?? '';
+      const tag = tagRaw
+        .split('\n')
+        .map(it => it.replace(/^[\-\*\+\#\s]*/, ''))
+        .filter(it => !it.startsWith('![') && !it.startsWith('>') && !it.startsWith('<!--') && !/(原料)|(工具)/.test(it))
+        .map(it =>
+          it
+            .replace(/\[(.+)\]\(.+\)/g, '$1')
+            .replace(/[（\(\[].*[）\)\]]/g, '')
+            .replace(/\*/g, '')
+            .trim(),
+        )
+        .filter(Boolean);
+      _menu.children.push({
+        title: path.basename(book, '.md'),
+        level: 3,
+        children: [],
+        url: formatUrl(book),
+        star: 0,
+        tag,
+      });
+    }
+    rootMenu.children.push(_menu);
+  }
+  cook[0].children.splice(menuIdx + 1, 0, rootMenu);
+}
+
 const cookMenu = excludeData(filterEmptyData(cook), options.exclude)[0];
 
-const version = execSync('git rev-parse HEAD:HowToCook').toString().trim();
+const version = execSync('git rev-parse HEAD').toString().trim();
 
 await fs.writeFile(
   './data/menu.json',

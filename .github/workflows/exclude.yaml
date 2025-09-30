@@ -32,7 +32,7 @@ jobs:
           git submodule foreach --recursive git lfs pull
 
       - run: pnpm i
-      - run: npm start -- -e 搭建环境 菜谱
+      - run: npm start -- -e 搭建环境 菜谱 老乡鸡开源菜谱
 
       - name: Submit Update
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -42,7 +42,7 @@ jobs:
       - name: Copy File
         run: |
           mkdir dist
-          cp -r ./data ./HowToCook ./README.md ./dist
+          cp -r ./data ./HowToCook ./CookLikeHOC ./README.md ./dist
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

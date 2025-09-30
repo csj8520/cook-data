@@ -1,3 +1,7 @@
 [submodule "HowToCook"]
 	path = HowToCook
 	url = https://github.com/Anduin2017/HowToCook.git
+[submodule "CookLikeHOC"]
+	path = CookLikeHOC
+	url = https://github.com/Gar-b-age/CookLikeHOC.git
+	branch = vitepress_ai
