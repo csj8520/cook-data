@@ -9,6 +9,7 @@
 - 内容来自 HowToCook，结合程序员的思维习惯，优化步骤与表达方式。
 - 多种菜谱覆盖：涵盖家常菜、特色菜、快手菜等多种类型，持续扩展中。
 - 精确指导：用数字和流程图说话，让烹饪像写代码一样严谨高效。
+- 新增老乡鸡开源菜谱项目地址 [CookLikeHOC](https://github.com/Gar-b-age/CookLikeHOC)
 
 ## 特性
 
@@ -21,6 +22,7 @@
 ## 致谢
 
 - [HowToCook](https://github.com/Anduin2017/HowToCook) 项目及所有贡献者
+- [CookLikeHOC](https://github.com/Gar-b-age/CookLikeHOC) 项目及所有贡献者
 - 所有参与完善本项目的程序员与美食爱好者
 
 ---
