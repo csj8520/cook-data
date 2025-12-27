@@ -197,7 +197,10 @@ if (menuIdx !== -1) {
 
 const cookMenu = excludeData(filterEmptyData(cook), options.exclude)[0];
 
-const version = execSync('git rev-parse HEAD').toString().trim();
+const versionHowToCook = execSync('git rev-parse --short HEAD:HowToCook').toString().trim();
+const versionCookLikeHOC = execSync('git rev-parse --short HEAD:CookLikeHOC').toString().trim();
+
+const version = `${versionHowToCook}-${versionCookLikeHOC}`;
 
 await fs.writeFile(
   './data/menu.json',
